@@ -270,8 +270,8 @@
 
         /* WhatsApp Chat Styles */
         .whatsapp-chat {
-            width: 350px;
-            height: 600px;
+            width: 400px;
+            height: 700px;
             background: #e5ddd5;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
@@ -328,7 +328,7 @@
 
         .chat-messages {
             padding: 20px;
-            height: calc(100% - 50px);
+            height: calc(100% - 140px);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -382,6 +382,10 @@
 
         .message.client .time {
             text-align: right;
+        }
+
+        .message.bot .time {
+            text-align: left;
         }
 
         .message.typing {
