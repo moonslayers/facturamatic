@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturamatic - Sistema de Facturación Automática con WhatsApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #7b2ff7;
+            --accent-color: #0f3460;
+            --dark-bg: #0f0f23;
+            --darker-bg: #080812;
+            --card-bg: rgba(26, 26, 46, 0.8);
+            --light-color: #f8f9fa;
+            --dark-color: #ffffff;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --neon-glow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --neon-border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            overflow-x: hidden;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, #1a1a2e 100%);
+            min-height: 100vh;
+        }
+
+        /* Animated particles background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(123, 47, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: particleFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--neon-border);
+            box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            padding: 120px 0 80px;
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.03) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(123, 47, 247, 0.03) 50%, transparent 70%);
+            animation: heroScan 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes heroScan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 20px rgba(0, 212, 255, 0.3)); }
+            100% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(123, 47, 247, 0.5)); }
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            box-shadow: var(--neon-glow);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 50px rgba(123, 47, 247, 0.4);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            margin-left: 15px;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-color: var(--secondary-color);
+            box-shadow: var(--neon-glow);
+        }
+
+        .hero-image {
+            position: relative;
+            text-align: center;
+        }
+
+        /* WhatsApp Chat Styles */
+        .whatsapp-chat {
+            width: 350px;
+            height: 600px;
+            background: #e5ddd5;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+            animation: chatFloat 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes chatFloat {
+            0% { transform: translateY(0) rotate(-1deg); }
+            100% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #075e54, #128c7e);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .contact-details h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .contact-details span {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .chat-options {
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            height: calc(100% - 50px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 75%;
+            margin-bottom: 15px;
+            position: relative;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.client {
+            align-self: flex-end;
+        }
+
+        .message.client p {
+            background: #dcf8c6;
+            color: #303030;
+            border-radius: 18px 18px 4px 18px;
+            padding: 10px 15px;
+            margin: 0;
+            word-wrap: break-word;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+        }
+
+        .message.bot p {
+            background: white;
+            color: #303030;
+            border-radius: 18px 18px 18px 4px;
+            padding: 10px 15px;
+            margin: 0;
+            word-wrap: break-word;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .message .time {
+            font-size: 11px;
+            color: #667781;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .message.client .time {
+            text-align: right;
+        }
+
+        .message.typing {
+            align-self: flex-start;
+        }
+
+        .typing-indicator {
+            background: white;
+            border-radius: 18px 18px 18px 4px;
+            padding: 15px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #667781;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        .chat-input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #f0f0f0;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            background: white;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 15px;
+            margin-left: 10px;
+            color: #667781;
+        }
+
+        .input-actions i {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .input-actions i:hover {
+            color: var(--primary-color);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 255, 0.05) 50%, transparent 100%);
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: var(--neon-glow);
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            max-width: 700px;
+            margin: 20px auto 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--neon-border);
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+            border-radius: 15px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2), 0 0 30px rgba(123, 47, 247, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+            animation: iconPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-card p {
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(123, 47, 247, 0.05) 0%, rgba(0, 212, 255, 0.05) 100%);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--neon-glow);
+            animation: numberPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes numberPulse {
+            0% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
+            100% { box-shadow: 0 0 30px rgba(123, 47, 247, 0.6), 0 0 40px rgba(0, 212, 255, 0.3); }
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -50%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            animation: dataFlow 2s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .step p {
+            color: var(--text-color);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 100px 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 70%),
+                        radial-gradient(ellipse at 70% 80%, rgba(123, 47, 247, 0.08) 0%, transparent 70%);
+        }
+
+        .benefits-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .benefits-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefits-list {
+            list-style: none;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .benefit-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            margin-top: 5px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+            animation: benefitIconGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes benefitIconGlow {
+            0% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4)); }
+            100% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(123, 47, 247, 0.6)); }
+        }
+
+        .benefit-text h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .benefit-text p {
+            color: var(--text-color);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(123, 47, 247, 0.03) 0%, rgba(0, 212, 255, 0.05) 100%);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--neon-border);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 80px;
+            color: var(--primary-color);
+            opacity: 0.2;
+            font-family: Georgia, serif;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 0;
+            background: radial-gradient(ellipse at 50% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-info h3 {
+            font-size: 2rem;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.3rem;
+            box-shadow: var(--neon-glow);
+            animation: contactIconPulse 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes contactIconPulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
+            100% { transform: scale(1.1); box-shadow: 0 0 30px rgba(123, 47, 247, 0.6); }
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--neon-border);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: var(--neon-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--accent-color) 50%, #0a0a15 100%);
+            color: white;
+            padding: 60px 0 20px;
+            border-top: var(--neon-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            bottom: 0;
+            left: 0;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+        }
+
+        .footer-column p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content,
+            .benefits-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+
+            nav {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 50px;
+                transition: left 0.3s ease;
+                z-index: 999;
+            }
+
+            nav.active {
+                left: 0;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav ul li {
+                margin: 15px 0;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    Facturamatic
+                </div>
+                <nav id="nav">
+                    <ul>
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#features">Características</a></li>
+                        <li><a href="#how-it-works">Cómo funciona</a></li>
+                        <li><a href="#benefits">Beneficios</a></li>
+                        <li><a href="#testimonials">Testimonios</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-menu" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>El Futuro de la Facturación Automática está Aquí</h1>
+                    <p>Agentes inteligentes potenciados por IA que revolucionan tu atención al cliente a través de WhatsApp. Los bots más avanzados del mercado, diseñados para aprender de tu negocio y crecer contigo.</p>
+                    <div>
+                        <a href="#contact" class="btn">Experience IA Demo</a>
+                        <a href="#features" class="btn">Ver Tecnología en Acción</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="whatsapp-chat">
+                        <div class="chat-header">
+                            <div class="contact-info">
+                                <div class="contact-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="contact-details">
+                                    <h4>Facturamatic IA</h4>
+                                    <span>En línea</span>
+                                </div>
+                            </div>
+                            <div class="chat-options">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </div>
+                        </div>
+                        <div class="chat-messages">
+                            <div class="message client">
+                                <p>¡Hola! Necesito la factura por el servicio de consultoría de este mes</p>
+                                <span class="time">10:23 AM</span>
+                            </div>
+                            <div class="message bot">
+                                <p>¡Hola! 👋 Soy el asistente IA de Facturamatic. Entiendo que necesitas tu factura.</p>
+                                <span class="time">10:23 AM</span>
+                            </div>
+                            <div class="message bot">
+                                <p>He encontrado 1 factura pendiente por $2,500.00 por consultoría tecnológica.</p>
+                                <span class="time">10:24 AM</span>
+                            </div>
+                            <div class="message bot typing">
+                                <div class="typing-indicator">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Escribe un mensaje..." readonly>
+                            <div class="input-actions">
+                                <i class="fas fa-paperclip"></i>
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tecnología de Vanguardia IA</h2>
+                <p>Agentes inteligentes que revolucionan la facturación automática con aprendizaje continuo y procesamiento natural del lenguaje.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Agentes Inteligentes</h3>
+                    <p> bots de IA que aprenden de tu negocio, se adaptan a tus patrones y mejoran continuamente sin intervención manual.</p>
+                    <a href="#" class="btn">Explorar IA</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Procesamiento Natural</h3>
+                    <p>Conversaciones humanas perfectas. Nuestra IA entiende contextos, intenciones y responde con precisión quirúrgica.</p>
+                    <a href="#" class="btn">Ver Tecnología</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Análisis Predictivo</h3>
+                    <p>Anticipa necesidades de clientes, optimiza procesos y toma decisiones inteligentes basadas en patrones de datos.</p>
+                    <a href="#" class="btn">Descubrir</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>Proceso IA-Driven</h2>
+                <p>Tecnología de inteligencia artificial que se adapta a tu negocio en 3 pasos revolucionarios.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Configuración Inteligente</h3>
+                    <p>IA asistida que analiza tu negocio y configura automáticamente parámetros óptimos para rendimiento máximo.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Entrenamiento del Agente</h3>
+                    <p>Nuestra IA aprende de tus datos, patrones y preferencias para crear un agente único para tu negocio.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Despliegue Cuántico</h3>
+                    <p>Activación instantánea en múltiples canales con IA que evoluciona y mejora continuamente sola.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="section-title">
+                <h2>Ventajas Cuánticas IA</h2>
+                <p>Experimenta el poder de la inteligencia artificial aplicada a la facturación automática del futuro.</p>
+            </div>
+            <div class="benefits-content">
+                <div class="benefits-image">
+                    <img src="https://picsum.photos/seed/analytics-dashboard-statistics-charts-graphs-data-visualization/600/400.jpg" alt="Dashboard de Estadísticas IA">
+                </div>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Eficiencia Cuántica</h3>
+                            <p>Reducción del 90% en tiempo administrativo con IA que procesa miles de facturas simultáneamente.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Inteligencia Artificial Avanzada</h3>
+                            <p>Toma de decisiones predictiva basada en patrones de datos y aprendizaje continuo.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Experiencia Futurista</h3>
+                            <p>Impresiona a tus clientes con tecnología de vanguardia que redefine la atención al cliente.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Escalabilidad Infinita</h3>
+                            <p>Crece sin límites con IA que aprende y evoluciona contigo, adaptándose a cualquier volumen.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Resultados IA Comprobados</h2>
+                <p>Empresas líderes experimentando la revolución de la facturación inteligente con tecnología de vanguardia.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "La IA de Facturamatic ha transformado completamente nuestro proceso. Los agentes inteligentes entienden el contexto de cada cliente y responden con precisión humana. Redujimos costos operativos en 85%."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://picsum.photos/seed/tech-ceo1/50/50.jpg" alt="Cliente" class="author-image">
+                        <div class="author-info">
+                            <h4>María González</h4>
+                            <p>Directora de Innovación, TechSoluciones</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "El análisis predictivo de la IA anticipa necesidades de clientes antes de que las expresen. Es como tener un equipo de analistas trabajando 24/7. Increíblemente revolucionario."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://picsum.photos/seed/ai-expert2/50/50.jpg" alt="Cliente" class="author-image">
+                        <div class="author-info">
+                            <h4>Javier Rodríguez</h4>
+                            <p>CEO, Consultoría Digital IA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "El aprendizaje continuo de los agentes es asombroso. Cada día son más inteligentes y eficientes. Hemos pasado de 1000 facturas manuales a proceso totalmente automático e inteligente."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://picsum.photos/seed/startup-founder3/50/50.jpg" alt="Cliente" class="author-image">
+                        <div class="author-info">
+                            <h4>Ana Martínez</h4>
+                            <p>Gerente, E-commerce Futurista</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Experimenta la Revolución IA</h2>
+                <p>Únete al futuro de la facturación automática. Descubre cómo nuestros agentes inteligentes pueden transformar tu negocio.</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Inicia tu Transformación Digital</h3>
+                    <p>Reserva una demostración IA y experimenta el poder de la facturación inteligente del futuro.</p>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email Tecnológico</h4>
+                            <p>ai@facturamatic.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Sede Tecnológica</h4>
+                            <p>Ensenada, Baja California</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div>
+                            <h4>IA Hub Global</h4>
+                            <p>Conectados mundialmente</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Nombre Completo</label>
+                            <input type="text" id="name" name="name" required placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="email@tuempresa.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Empresa</label>
+                            <input type="text" id="company" name="company" placeholder="Nombre de tu empresa">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensaje</label>
+                            <textarea id="message" name="message" placeholder="Cuéntanos sobre tu negocio y cómo la IA puede revolucionarlo..."></textarea>
+                        </div>
+                        <button type="submit" class="form-btn">Iniciar Demo IA</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Facturamatic IA</h3>
+                    <p>El futuro de la facturación automática con agentes inteligentes potenciados por IA que aprenden y evolucionan contigo.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Tecnología</h3>
+                    <ul>
+                        <li><a href="#home">Inicio IA</a></li>
+                        <li><a href="#features">Agentes Inteligentes</a></li>
+                        <li><a href="#how-it-works">Proceso IA-Driven</a></li>
+                        <li><a href="#benefits">Ventajas Cuánticas</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Soluciones IA</h3>
+                    <ul>
+                        <li><a href="#">Agentes Conversacionales</a></li>
+                        <li><a href="#">Análisis Predictivo</a></li>
+                        <li><a href="#">Procesamiento Natural</a></li>
+                        <li><a href="#">IA API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Soporte Futurista</h3>
+                    <ul>
+                        <li><a href="#">Centro IA</a></li>
+                        <li><a href="#">Documentación Técnica</a></li>
+                        <li><a href="#">Tutoriales IA</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                        <li><a href="aviso-privacidad.html">Aviso de Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Facturamatic IA. El futuro de la facturación inteligente. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav').classList.toggle('active');
+        });
+
+        // Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const company = document.getElementById('company').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would normally send the data to a server
+            // For this demo, we'll just show an alert
+            alert(`Gracias por tu interés, ${name}! Nos pondremos en contacto contigo pronto en ${email}.`);
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
+    </script>
+</body>
+</html>

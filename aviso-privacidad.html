@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Facturamatic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Reutilizando estilos base de la landing page --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #7b2ff7;
+            --accent-color: #0f3460;
+            --dark-bg: #0f0f23;
+            --darker-bg: #080812;
+            --card-bg: rgba(26, 26, 46, 0.8);
+            --light-color: #f8f9fa;
+            --dark-color: #ffffff;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --neon-glow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --neon-border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        body {
+            line-height: 1.7;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, #1a1a2e 100%);
+            min-height: 100vh;
+        }
+
+        /* Animated particles background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(123, 47, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: particleFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Estilos específicos para la página de política --- */
+        header {
+            background-color: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--neon-border);
+            box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+            padding: 20px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        .back-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .back-link i {
+            margin-right: 8px;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        main {
+            padding: 60px 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .policy-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--neon-border);
+            padding: 40px 60px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .policy-container h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .policy-container h2 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        .policy-container h3 {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .policy-container p {
+            margin-bottom: 20px;
+        }
+
+        .policy-container ul {
+            list-style: none;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .policy-container ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .policy-container ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .policy-container strong, .policy-container b {
+            color: var(--dark-color);
+        }
+
+        .policy-container a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .policy-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Footer (Reutilizado) --- */
+        footer {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--accent-color) 50%, #0a0a15 100%);
+            color: white;
+            padding: 60px 0 20px;
+            border-top: var(--neon-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary-color);
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-column p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .policy-container {
+                padding: 30px 25px;
+            }
+
+            .policy-container h1 {
+                font-size: 2rem;
+            }
+
+            .policy-container h2 {
+                font-size: 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    Facturamatic
+                </a>
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al inicio
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="policy-container">
+                <h1>Política de Privacidad</h1>
+                <p class="last-updated"><strong>Última actualización:</strong> 24 de mayo de 2024</p>
+
+                <p>En Facturamatic, valoramos tu privacidad y estamos comprometidos a proteger tus datos personales. Esta Política de Privacidad explica qué información recopilamos, cómo la usamos, con quién la compartimos y los derechos que tienes sobre tu información cuando utilizas nuestros servicios de facturación automática.</p>
+
+                <h2>1. Información que Recopilamos</h2>
+                <p>Recopilamos diferentes tipos de información para proporcionar y mejorar nuestro servicio:</p>
+
+                <h3>a) Información que Usted Nos Proporciona</h3>
+                <ul>
+                    <li><strong>Datos de Contacto:</strong> Cuando te registras o contactas con nosotros, podemos recopilar tu nombre, dirección de correo electrónico, número de teléfono y nombre de tu empresa.</li>
+                    <li><strong>Datos de Facturación:</strong> Para utilizar el servicio, nos proporcionarás información de tus clientes (nombre, contacto, detalles de productos/servicios) necesarios para generar las facturas a través del bot.</li>
+                    <li><strong>Comunicaciones:</strong> Cualquier información que nos envíes a través de nuestro formulario de contacto, correo electrónico o WhatsApp.</li>
+                </ul>
+
+                <h3>b) Información que Recopilamos Automáticamente</h3>
+                <ul>
+                    <li><strong>Datos de Uso:</strong> Información sobre cómo interactúas con nuestro servicio, como las páginas visitadas, el tiempo de uso y las acciones realizadas en el dashboard.</li>
+                    <li><strong>Datos de Dispositivo y Conexión:</strong> Dirección IP, tipo de navegador, sistema operativo y otros identificadores de dispositivo.</li>
+                    <li><strong>Cookies y Datos de Seguimiento:</strong> Utilizamos cookies y tecnologías similares para mejorar la experiencia del usuario y analizar el tráfico de nuestro sitio web. Puedes leer más sobre esto en nuestra <a href="#">Política de Cookies</a>.</li>
+                </ul>
+
+                <h2>2. ¿Cómo Usamos tu Información?</h2>
+                <p>Utilizamos la información que recopilamos para los siguientes propósitos:</p>
+                <ul>
+                    <li><strong>Prestar el Servicio:</strong> Para operar el bot de facturación, mantener el dashboard y permitir la facturación manual.</li>
+                    <li><strong>Comunicación:</strong> Para responder a tus consultas, enviarte notificaciones sobre el servicio y enviarte información comercial (si has dado tu consentimiento).</li>
+                    <li><strong>Mejora y Seguridad:</strong> Para analizar el uso del servicio, detectar problemas de seguridad y realizar mejoras.</li>
+                    <li><strong>Cumplimiento Legal:</strong> Para cumplir con obligaciones legales, regulatorias o fiscales.</li>
+                </ul>
+
+                <h2>3. ¿Con Quién Compartimos tu Información?</h2>
+                <p>No vendemos, alquilamos ni comercializamos tu información. Solo la compartimos en las siguientes circunstancias:</p>
+                <ul>
+                    <li><strong>Proveedores de Servicios:</strong> Con terceros que nos ayudan a operar el servicio (ej. proveedores de hosting, plataformas de mensajería como WhatsApp/Meta, servicios de email).</li>
+                    <li><strong>Tus Clientes:</strong> La información de facturación que nos proporcionas se comparte exclusivamente con tus clientes a través de WhatsApp para la generación y envío de sus facturas.</li>
+                    <li><strong>Requisitos Legales:</strong> Si la ley nos lo exige o para proteger nuestros derechos, propiedad o seguridad, o la de nuestros usuarios.</li>
+                </ul>
+
+                <h2>4. Seguridad de tus Datos</h2>
+                <p>Implementamos medidas de seguridad técnicas y organizativas adecuadas para proteger tu información contra el acceso no autorizado, la alteración, la divulgación o la destrucción. Esto incluye el uso de encriptación, servidores seguros y controles de acceso estrictos. Sin embargo, ningún método de transmisión por Internet es 100% seguro.</p>
+
+                <h2>5. Conservación de Datos</h2>
+                <p>Conservaremos tu información personal solo durante el tiempo que sea necesario para cumplir con los fines para los cuales fue recopilada, incluyendo los períodos de retención requeridos por la ley (por ejemplo, para fines fiscales y contables).</p>
+
+                <h2>6. Tus Derechos</h2>
+                <p>Dependiendo de tu ubicación, puedes tener los siguientes derechos sobre tus datos personales:</p>
+                <ul>
+                    <li><strong>Acceso:</strong> Solicitar una copia de los datos que tenemos sobre ti.</li>
+                    <li><strong>Rectificación:</strong> Solicitar la corrección de datos inexactos.</li>
+                    <li><strong>Supresión:</strong> Solicitar la eliminación de tus datos (derecho al olvido).</li>
+                    <li><strong>Portabilidad:</strong> Solicitar una copia de tus datos en un formato estructurado y de uso común.</li>
+                    <li><strong>Oposición:</strong> Oponerte al procesamiento de tus datos.</li>
+                    <li><strong>Retirada del Consentimiento:</strong> Retirar tu consentimiento en cualquier momento para el procesamiento basado en este.</li>
+                </ul>
+                <p>Para ejercer cualquiera de estos derechos, contáctanos a través de <a href="mailto:privacidad@facturamatic.com">privacidad@facturamatic.com</a>.</p>
+
+                <h2>7. Cambios a esta Política de Privacidad</h2>
+                <p>Podemos actualizar nuestra Política de Privacidad ocasionalmente. Te notificaremos cualquier cambio publicando la nueva política en esta página y actualizando la fecha de "Última actualización". Te recomendamos revisar esta política periódicamente.</p>
+
+                <h2>8. Contacto</h2>
+                <p>Si tienes alguna pregunta o inquietud sobre esta Política de Privacidad, no dudes en contactarnos:</p>
+                <ul>
+                    <li>Por correo electrónico: <a href="mailto:ai@facturamatic.com">ai@facturamatic.com</a></li>
+                    <li>A través de nuestro formulario de contacto en el sitio web.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Facturamatic</h3>
+                    <p>Simplificamos la facturación para tu negocio con tecnología de vanguardia y la comodidad de WhatsApp.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="index.html#home">Inicio</a></li>
+                        <li><a href="index.html#features">Características</a></li>
+                        <li><a href="index.html#how-it-works">Cómo funciona</a></li>
+                        <li><a href="index.html#benefits">Beneficios</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li><a href="#">Bot de WhatsApp</a></li>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Facturación Manual</a></li>
+                        <li><a href="#">API para Desarrolladores</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Soporte</h3>
+                    <ul>
+                        <li><a href="#">Centro de Ayuda</a></li>
+                        <li><a href="#">Documentación</a></li>
+                        <li><a href="#">Tutoriales</a></li>
+                        <li><a href="aviso-privacidad.html">Aviso de Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Facturamatic IA. El futuro de la facturación inteligente. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
